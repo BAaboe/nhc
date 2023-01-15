@@ -129,10 +129,8 @@ Rectangle Player::checkHitbox(Json::Value level){
             }else if(position.y > level[i][1].asFloat()){
                 xForce = 0;
                 if(position.x > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()){
-                    std::cout << "ahh" << std::endl;
                     position.x = level[i][0].asFloat()+level[i][2].asFloat();
                 } else if(position.x < level[i][0].asFloat()+level[i][2].asFloat()){
-                    std::cout << "ahh1" << std::endl;
                     position.x = level[i][0].asFloat()-width;
                 }
                 return (Rectangle) {0,-100,0,0};
