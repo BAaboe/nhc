@@ -121,25 +121,25 @@ void Player::draw(){
 
 Rectangle Player::checkHitbox(Json::Value level){
     for(int i=0; i<level.size(); i++){
-        if(position.x+width-10 > level[i][0].asFloat() && position.x+10 < level[i][0].asFloat()+level[i][2].asFloat()){
+        if(position.x+width > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()){
             if(position.y+height >= level[i][1].asFloat() && position.y <= level[i][1].asFloat()){
                 grounded = true;
                 Rectangle rect = (Rectangle){level[i][0].asFloat(), level[i][1].asFloat(), level[i][2].asFloat(), level[i][3].asFloat()};
                 return rect;
             }else if(position.y > level[i][1].asFloat()){
                 xForce = 0;
-                if(position.x > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()/2){
-                    position.x = level[i][0].asFloat()-width;
-                } else if(position.x < level[i][0].asFloat()+level[i][2].asFloat()){
+                if(position.x > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()){
+                    std::cout << "ahh" << std::endl;
                     position.x = level[i][0].asFloat()+level[i][2].asFloat();
+                } else if(position.x < level[i][0].asFloat()+level[i][2].asFloat()){
+                    std::cout << "ahh1" << std::endl;
+                    position.x = level[i][0].asFloat()-width;
                 }
                 return (Rectangle) {0,-100,0,0};
             } 
         }
     }
     return (Rectangle) {0,-100,0,0};
-
-
 }
 
 Player::Player(){
