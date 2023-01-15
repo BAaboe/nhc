@@ -1,0 +1,25 @@
+CC=  g++  # gcc or g++
+
+CFLAGS=-g -Wall
+LIBS=-lraylib -ljsoncpp
+
+O=./build
+S=./src
+
+OBJS=				\
+			$(O)/player.o \
+
+all:	 $(O)/nhc
+
+clean:
+	rm -f ./build/*.o
+
+run: all
+	./nhc
+
+$(O)/nhc:	$(OBJS) $(O)/main.o
+	$(CC) $(CFLAGS) $(OBJS) $(O)/main.o \
+	-o nhc $(LIBS)
+
+$(O)/%.o:	$(S)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
