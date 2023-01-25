@@ -7,6 +7,7 @@
 #include <fstream>
 #include <json/json.h>
 #include <string>
+#include "menu.h"
 
 class Game {
     public:
@@ -21,7 +22,7 @@ class Game {
 
         Player player;
         Camera2D camera;
-
+        
         Game(){
             loadLevel(1);
             float startX, startY;
@@ -40,9 +41,20 @@ class Game {
 
 
 };
-
+ 
 int Game::main(){
     InitWindow(screenWidth, screenHeight, "Nokka Helt Crazy");
+    
+    SetTargetFPS(60);
+    
+    SetExitKey(0);
+
+    Menu menu(screenWidth, screenHeight);
+    int c = menu.loop();
+    
+    if(c == 2){
+        CloseWindow();
+    }
 
     player.slime = LoadTexture("assets/slime.png");
     player.slime2 = LoadTexture("assets/slime2.png");
@@ -50,18 +62,14 @@ int Game::main(){
     pillar1 = LoadTexture("assets/pillar1.png");
     pillar2 = LoadTexture("assets/pillar2.png");
     brick1 = LoadTexture("assets/bricks.png");
-
-    SetTargetFPS(60);
-
+    
     camera = { 0 };
     camera.target = player.getPosition();
     camera.offset = {(float)screenWidth/2, (float)screenHeight/2};
     camera.rotation = .0f;
     camera.zoom = 1.0f;
-
-
+    
     while(!WindowShouldClose()){
-        
         update();
 
         draw();

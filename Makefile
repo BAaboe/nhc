@@ -1,4 +1,5 @@
 CC=  g++  # gcc or g++
+WINCC= i686-w64-mingw32-gcc
 
 CFLAGS=-g -Wall
 LIBS=-lraylib -ljsoncpp
@@ -8,6 +9,7 @@ S=./src
 
 OBJS=				\
 			$(O)/player.o \
+			$(O)/menu.o \
 
 all:	 $(O)/nhc
 

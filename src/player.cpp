@@ -35,11 +35,11 @@ void Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::V
         }
     }
     if(position.y + height >= screenHeight){
-        position.y = screenHeight - height;
-        grounded = true;
-        // position = startPosition;
-        // camera->target.x = position.x;
-        // xForce = 0;
+        // position.y = screenHeight - height;
+        // grounded = true;
+        position = startPosition;
+        camera->target.x = position.x;
+        xForce = 0;
     }
 
 
@@ -116,19 +116,19 @@ void Player::draw(){
     DrawTexturePro(currentSlime, sourceRec, destRec, origin, rotation, WHITE);
 
     //DrawRectangleLines(position.x, position.y, width, height, MAROON);
-    //DrawRectangle(position.x, position.y, width, height, MAROON);
+    //DrawRectangle(position.x, position.y, width, height, BLUE);
 }
 
 Rectangle Player::checkHitbox(Json::Value level){
     for(int i=0; i<level.size(); i++){
-        if(position.x+width > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()){
+        if(position.x+width-(width/4) > level[i][0].asFloat() && position.x+(width/4) < level[i][0].asFloat()+level[i][2].asFloat()){
             if(position.y+height >= level[i][1].asFloat() && position.y <= level[i][1].asFloat()){
                 grounded = true;
                 Rectangle rect = (Rectangle){level[i][0].asFloat(), level[i][1].asFloat(), level[i][2].asFloat(), level[i][3].asFloat()};
                 return rect;
             }else if(position.y > level[i][1].asFloat()){
                 xForce = 0;
-                if(position.x > level[i][0].asFloat() && position.x < level[i][0].asFloat()+level[i][2].asFloat()){
+                if(position.x > level[i][0].asFloat()){
                     position.x = level[i][0].asFloat()+level[i][2].asFloat();
                 } else if(position.x < level[i][0].asFloat()+level[i][2].asFloat()){
                     position.x = level[i][0].asFloat()-width;
