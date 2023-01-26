@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <string>
 #include <iostream>
+#include "credits.h"
 
 Menu::Menu(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
@@ -133,6 +134,8 @@ int Menu::update(){
     }
 
     lastMousePos = mousePos;
+    
+    Entries pressed = NONE;
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isSelected){
         switch (selected) {
@@ -142,9 +145,11 @@ int Menu::update(){
                 break;
             case SETTINGS:
                 std::cout << "Settings pressed" << std::endl;
+                pressed = SETTINGS;
                 break;
             case CREDITS:
                 std::cout << "Credits pressed" << std::endl;
+                pressed = CREDITS;
                 break;
             case QUIT:
                 std::cout << "Quit pressed" << std::endl;
@@ -162,10 +167,12 @@ int Menu::update(){
                 break;
             case SETTINGS:
                 std::cout << "Settings pressed" << std::endl;
+                pressed = SETTINGS;
                 break;
             case CREDITS:
                 std::cout << "Credits pressed" << std::endl;
-                break;;
+                pressed = CREDITS;
+                break;
             case QUIT:
                 std::cout << "Quit pressed" << std::endl;
                 return 2;
@@ -173,5 +180,10 @@ int Menu::update(){
             default:
                 break;
         }
+    }
+
+    if(pressed == CREDITS){
+        Credits creds(screenWidth, screenHeight);
+        creds.loop();
     }
 }

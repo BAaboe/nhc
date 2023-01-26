@@ -10,6 +10,7 @@ S=./src
 OBJS=				\
 			$(O)/player.o \
 			$(O)/menu.o \
+			$(O)/credits.o \
 
 all:	 $(O)/nhc
 

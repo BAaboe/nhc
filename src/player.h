@@ -31,6 +31,7 @@ class Player{
         bool grounded;
 
         int spaceDown;
+        double timeHeldSpace;
 
         bool direction;
 
