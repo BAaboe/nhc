@@ -37,7 +37,7 @@ int Menu::loop(){
         }
         draw();
     }
-    return 1;
+    return 2;
     
 }
 

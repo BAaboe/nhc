@@ -31,8 +31,7 @@ class Player{
         bool grounded;
 
         int spaceDown;
-        double timeHeldSpace;
-
+        
         bool direction;
 
         Rectangle checkHitbox(Json::Value);

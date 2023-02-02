@@ -18,10 +18,28 @@ void Player::setStartPosition(const Vector2 startPosition){
     this->startPosition = startPosition;
 }
 
+
+Player::Player(){
+    grounded = false;
+    yForce = 0.0f;
+    xForce = 0.0f;
+    strength = 20.0f;
+    gravity = .981f;
+
+    height = 40;
+    width = 54;
+    dHeight = 40;
+    dWidth = 54;
+
+    spaceDown = -1;
+
+    rotation = 0;
+     
+}
+
 void Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::Value level){
     
     currentSlime = slime;
-     
     position.y += yForce;
 
     if(IsKeyDown(KEY_RIGHT)){direction=false;}
@@ -67,7 +85,7 @@ void Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::V
     }
 
     if(IsKeyUp(KEY_SPACE) && spaceDown != -1){
-        yForce = -spaceDown/4;
+        yForce = -spaceDown/4.5;
         xForce = -spaceDown/10;
         grounded = false;
         height = dHeight;
@@ -140,20 +158,3 @@ Rectangle Player::checkHitbox(Json::Value level){
     return (Rectangle) {0,-100,0,0};
 }
 
-Player::Player(){
-    grounded = false;
-    yForce = 0.0f;
-    xForce = 0.0f;
-    strength = 20.0f;
-    gravity = .981f;
-
-    height = 40;
-    width = 54;
-    dHeight = 40;
-    dWidth = 54;
-
-    spaceDown = -1;
-
-    rotation = 0;
-     
-}

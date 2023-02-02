@@ -17,12 +17,17 @@ class Game {
         Texture2D brick1;
         Texture2D pillar1;
         Texture2D pillar2;
+        Texture2D cobal;
 
         Json::Value levelData;
 
         Player player;
         Camera2D camera;
-        
+    
+        double deltaTime;
+
+        double timeOnLevel;
+       
         Game(){
             loadLevel(1);
             float startX, startY;
@@ -44,7 +49,7 @@ class Game {
  
 int Game::main(){
     InitWindow(screenWidth, screenHeight, "Nokka Helt Crazy");
-    
+     
     SetTargetFPS(60);
     
     SetExitKey(0);
@@ -62,13 +67,17 @@ int Game::main(){
     pillar1 = LoadTexture("assets/pillar1.png");
     pillar2 = LoadTexture("assets/pillar2.png");
     brick1 = LoadTexture("assets/bricks.png");
-    
+    cobal = LoadTexture("assets/cobal.png"); 
+
+
     camera = { 0 };
     camera.target = player.getPosition();
     camera.offset = {(float)screenWidth/2, (float)screenHeight/2};
     camera.rotation = .0f;
     camera.zoom = 1.0f;
-    
+
+    timeOnLevel = 0;
+
     while(!WindowShouldClose()){
         update();
 
@@ -78,51 +87,86 @@ int Game::main(){
 
     CloseWindow();
     UnloadTexture(player.slime);
+    
 
     return 0;
 }
 void Game::draw(){
     BeginDrawing();
 
-            ClearBackground(RAYWHITE);
-            
-            BeginMode2D(camera);
+    ClearBackground(RAYWHITE);
+    
+    std::string timeStr = "";
+    int mins = (int) timeOnLevel / 60;
+    int secs = (int)timeOnLevel % 60;
+    
+    std::string minsStr = std::to_string(mins);
+    if(mins < 10){
+        minsStr = "0"+std::to_string(mins);
+    }
+    
+    std::string secsStr = std::to_string(secs);
+    if(secs < 10){
+        secsStr = "0"+std::to_string(secs);    
+    }
 
-                for(int i = 0; i<levelData["data"].size(); i++){
-                    Json::Value block = levelData["data"][i];
+    timeStr = minsStr+ ":" + secsStr;   
 
-                    Texture2D texture;
-                    if(block[4] == "b"){
-                        texture = brick1;
-                    }else if(block[4] == "p1"){
-                        texture = pillar1;
-                    } else if(block[4] == "p2"){
-                        texture = pillar2;
-                    }
+    DrawText(timeStr.c_str(), 10, 10, 30, BLACK);
 
-                    //Rectangle sourceRec = {0.0f, 0.0f, (float)texture.width, (float)texture.width};
+    BeginMode2D(camera);
 
-                    //Rectangle destRec = {block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
+    for(int i = 0; i<levelData["data"].size(); i++){
+        Json::Value block = levelData["data"][i];
 
-                    //Vector2 origin = {(float)texture.width, (float)texture.width};
+        int height, width, x, y;
+        x = block[0].asInt();
+        y = block[1].asInt();
+        width = block[2].asInt();
+        height = block[3].asInt(); 
 
-                    //DrawTextureEx(texture, {block[0].asFloat(), block[1].asFloat()}, 0, block[3].asFloat()/texture.height, WHITE);
-                    //DrawTexturePro(texture, sourceRec, destRec, origin, 0.f, WHITE);
-                    Rectangle rect = (Rectangle){block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
-                    DrawRectangleRec(rect, MAROON);
-                }
+        int blockWidth = 50;
+        int blockHeight = 50;
+        for(int ii=0; ii<width/blockWidth; ii++){
+            for(int iii=0; iii<height/blockHeight; iii++){
+                DrawTextureEx(cobal, {(float)x+blockWidth*ii, (float)y+blockHeight*iii}, 0, 1, WHITE);
+            }
+        }
 
+        //Rectangle sourceRec = {0.0f, 0.0f, (float)texture.width, (float)texture.width};
 
-                player.draw();
-            
-            EndMode2D();
+        //Rectangle destRec = {block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
 
+        //Vector2 origin = {(float)texture.width, (float)texture.width};
 
-        
+        //DrawTextureEx(texture, {block[0].asFloat(), block[1].asFloat()}, 0, block[3].asFloat()/texture.height, WHITE);
+        //DrawTexturePro(texture, sourceRec, destRec, origin, 0.f, WHITE);
+        // Rectangle rect = (Rectangle){block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
+        // DrawRectangleRec(rect, GRAY);
+    }
+    player.draw();
+    
+    EndMode2D();
+
     EndDrawing();
 }
 
 void Game::update(){
+    deltaTime = GetFrameTime();
+
+    timeOnLevel += deltaTime;
+    
+    Json::Value *blocksOnScreen = &levelData["data"];
+
+    // while(true){
+    //     int size = levelData["data"].size();
+    //     int firstHalfI = (int) size/2;
+    //     int secondHalfI = (int)size-firstHalfI;
+    //     Json::Value secondHalf = (blocksOnScreen+sizeof(levelData["data"][0])*secondHalfI);
+    //     std::cout << &secondHalf[0] << std::endl; 
+    //     if(player.getPosition().x+screenWidth/2 > blocksOnScreen[size/2])
+    // }
+
     player.update(screenHeight, screenWidth, &camera, levelData["data"]);
 }
 
