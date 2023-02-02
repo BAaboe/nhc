@@ -8,7 +8,7 @@ class Player{
 
         void setStartPosition(const Vector2);
 
-        void update(int, int, Camera2D*, Json::Value);
+        int update(int, int, Camera2D*, Json::Value);
         void draw();
 
         Player();
@@ -19,7 +19,6 @@ class Player{
     private:
         Vector2 position;
         Vector2 dPosition;
-        Vector2 startPosition;
         
         float height, width, dHeight, dWidth;
 

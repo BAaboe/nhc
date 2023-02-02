@@ -11,6 +11,7 @@ OBJS=				\
 			$(O)/player.o \
 			$(O)/menu.o \
 			$(O)/credits.o \
+			$(O)/levelCleared.o \
 
 all:	 $(O)/nhc
 

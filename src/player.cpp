@@ -1,6 +1,7 @@
 #include "player.h"
 #include <cstddef>
 #include <cstdio>
+#include <json/value.h>
 #include <raylib.h>
 #include <iostream>
 #include <json/json.h>
@@ -14,9 +15,6 @@ Vector2 Player::getPosition(){
     return this->position;
 }
 
-void Player::setStartPosition(const Vector2 startPosition){
-    this->startPosition = startPosition;
-}
 
 
 Player::Player(){
@@ -37,8 +35,17 @@ Player::Player(){
      
 }
 
-void Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::Value level){
+int Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::Value levelData){
     
+    Json::Value level = levelData["data"];
+    
+    Vector2 startPosition = (Vector2){levelData["start_pos"][0].asFloat(), levelData["start_pos"][1].asFloat()};
+    
+    Rectangle goalPosition = (Rectangle){levelData["goal"][0].asFloat(), 
+                                         levelData["goal"][1].asFloat(), 
+                                         levelData["goal"][2].asFloat(), 
+                                         levelData["goal"][3].asFloat()};
+
     currentSlime = slime;
     position.y += yForce;
 
@@ -117,6 +124,13 @@ void Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::V
         camera->target.x = position.x+width/2;
         camera->offset.x = (float)screenWidth/2;
     }
+    
+
+    if(position.x < goalPosition.x+goalPosition.width && position.x+width > goalPosition.x){
+        if(position.y+height == goalPosition.y)
+        return 3;
+    }
+    return 0;
 }
 
 void Player::draw(){

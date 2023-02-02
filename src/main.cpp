@@ -8,15 +8,13 @@
 #include <json/json.h>
 #include <string>
 #include "menu.h"
+#include "levelCleared.h"
 
 class Game {
     public:
         const int screenWidth = 800;
         const int screenHeight = 600;
 
-        Texture2D brick1;
-        Texture2D pillar1;
-        Texture2D pillar2;
         Texture2D cobal;
 
         Json::Value levelData;
@@ -33,18 +31,19 @@ class Game {
             float startX, startY;
             startX = levelData["start_pos"][0].asFloat();
             startY = levelData["start_pos"][1].asFloat();
-            player.setStartPosition({startX, startY});
             player.setPosition({startX, startY});            
         }
         int main();
 
         void draw();
 
-        void update();
+        int update();
 
         void loadLevel(int);
-
-
+        
+        int levelCleard();
+        
+        std::string getTimeString();
 };
  
 int Game::main(){
@@ -62,11 +61,6 @@ int Game::main(){
     }
 
     player.slime = LoadTexture("assets/slime.png");
-    player.slime2 = LoadTexture("assets/slime2.png");
-    
-    pillar1 = LoadTexture("assets/pillar1.png");
-    pillar2 = LoadTexture("assets/pillar2.png");
-    brick1 = LoadTexture("assets/bricks.png");
     cobal = LoadTexture("assets/cobal.png"); 
 
 
@@ -79,7 +73,10 @@ int Game::main(){
     timeOnLevel = 0;
 
     while(!WindowShouldClose()){
-        update();
+        int code = update();
+        if(code == 2){
+            CloseWindow();
+        }
 
         draw();
 
@@ -87,15 +84,13 @@ int Game::main(){
 
     CloseWindow();
     UnloadTexture(player.slime);
+    UnloadTexture(cobal);
     
 
     return 0;
 }
-void Game::draw(){
-    BeginDrawing();
 
-    ClearBackground(RAYWHITE);
-    
+std::string Game::getTimeString(){
     std::string timeStr = "";
     int mins = (int) timeOnLevel / 60;
     int secs = (int)timeOnLevel % 60;
@@ -111,8 +106,17 @@ void Game::draw(){
     }
 
     timeStr = minsStr+ ":" + secsStr;   
+    
+    return timeStr;
+}
 
-    DrawText(timeStr.c_str(), 10, 10, 30, BLACK);
+void Game::draw(){
+    BeginDrawing();
+
+    ClearBackground(RAYWHITE);
+    
+
+    DrawText(getTimeString().c_str(), 10, 10, 30, BLACK);
 
     BeginMode2D(camera);
 
@@ -132,17 +136,6 @@ void Game::draw(){
                 DrawTextureEx(cobal, {(float)x+blockWidth*ii, (float)y+blockHeight*iii}, 0, 1, WHITE);
             }
         }
-
-        //Rectangle sourceRec = {0.0f, 0.0f, (float)texture.width, (float)texture.width};
-
-        //Rectangle destRec = {block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
-
-        //Vector2 origin = {(float)texture.width, (float)texture.width};
-
-        //DrawTextureEx(texture, {block[0].asFloat(), block[1].asFloat()}, 0, block[3].asFloat()/texture.height, WHITE);
-        //DrawTexturePro(texture, sourceRec, destRec, origin, 0.f, WHITE);
-        // Rectangle rect = (Rectangle){block[0].asFloat(), block[1].asFloat(), block[2].asFloat(), block[3].asFloat()};
-        // DrawRectangleRec(rect, GRAY);
     }
     player.draw();
     
@@ -151,12 +144,12 @@ void Game::draw(){
     EndDrawing();
 }
 
-void Game::update(){
+int Game::update(){
     deltaTime = GetFrameTime();
 
     timeOnLevel += deltaTime;
     
-    Json::Value *blocksOnScreen = &levelData["data"];
+    // Json::Value *blocksOnScreen = &levelData["data"];
 
     // while(true){
     //     int size = levelData["data"].size();
@@ -167,7 +160,35 @@ void Game::update(){
     //     if(player.getPosition().x+screenWidth/2 > blocksOnScreen[size/2])
     // }
 
-    player.update(screenHeight, screenWidth, &camera, levelData["data"]);
+    int code = player.update(screenHeight, screenWidth, &camera, levelData);
+    if(code == 3){
+        int code2 = levelCleard();
+        if(code2 == 2){
+            return 2;
+        }
+    }
+    return 0;
+}
+
+int Game::levelCleard(){
+    LevelCleared lc = LevelCleared(screenWidth, screenHeight, getTimeString());
+    return lc.loop();
+
+ //    while(!WindowShouldClose()){
+ //    
+ //        BeginDrawing();
+ //        
+ //        ClearBackground(RAYWHITE);
+ //        
+ //        std::string timeText = "You'r time was: " +getTimeString();
+ //
+ //        DrawText(timeText.c_str(), 0, 60, 50, BLACK);
+ // 
+ //        DrawText("Leveld Cleard", 0, 0, 50, BLACK);
+ //
+ //        EndDrawing();
+ //    }
+ //    return 2;
 }
 
 void Game::loadLevel(int levelNum){
@@ -182,6 +203,9 @@ void Game::loadLevel(int levelNum){
     for(int i = 0; i < levelData["data"].size(); i++){
         levelData["data"][i][1] = screenHeight-levelData["data"][i][1].asFloat(); 
     }
+
+    levelData["goal"][1] = screenHeight-levelData["goal"][1].asFloat();
+    levelData["start_pos"][1] = screenHeight-levelData["start_pos"][1].asFloat();
 
     std::cout << levelData << std::endl;
 }
