@@ -58,6 +58,13 @@ int Game::main(){
     
     if(c == 2){
         CloseWindow();
+    }else if(c < 0){
+        loadLevel(c*-1);
+        std::cout << "asd" << std::endl;
+        float startX, startY;
+        startX = levelData["start_pos"][0].asFloat();
+        startY = levelData["start_pos"][1].asFloat();
+        player.setPosition({startX, startY});            
     }
 
     player.slime = LoadTexture("assets/slime.png");
@@ -199,6 +206,9 @@ void Game::loadLevel(int levelNum){
     Json::Reader reader;
 
     reader.parse(file, levelData);
+    
+    std::cout << levelNum << std::endl;
+
 
     for(int i = 0; i < levelData["data"].size(); i++){
         levelData["data"][i][1] = screenHeight-levelData["data"][i][1].asFloat(); 

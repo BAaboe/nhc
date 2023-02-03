@@ -12,6 +12,7 @@ OBJS=				\
 			$(O)/menu.o \
 			$(O)/credits.o \
 			$(O)/levelCleared.o \
+			$(O)/levelSelect.o \
 
 all:	 $(O)/nhc
 

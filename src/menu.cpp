@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "credits.h"
+#include "levelSelect.h"
 
 Menu::Menu(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
@@ -34,6 +35,8 @@ int Menu::loop(){
             return 1;
         }else if(c == 2){
             return 2;
+        }else if(c < 0){
+            return c;
         }
         draw();
     }
@@ -141,7 +144,7 @@ int Menu::update(){
         switch (selected) {
             case PLAY:
                 std::cout << "Play pressed" << std::endl;
-                return 1;
+                pressed = PLAY; 
                 break;
             case SETTINGS:
                 std::cout << "Settings pressed" << std::endl;
@@ -163,7 +166,7 @@ int Menu::update(){
         switch (selected) {
             case PLAY:
                 std::cout << "Play pressed" << std::endl;
-                return 1;
+                pressed = PLAY;
                 break;
             case SETTINGS:
                 std::cout << "Settings pressed" << std::endl;
@@ -185,5 +188,14 @@ int Menu::update(){
     if(pressed == CREDITS){
         Credits creds(screenWidth, screenHeight);
         creds.loop();
+    } else if(pressed == PLAY){
+        LevelSelect ls = LevelSelect(screenWidth, screenHeight);
+        int code = ls.loop();
+        if(code == 2){
+            return 2;
+        } else if(code < 0){
+
+            return code;
+        }
     }
 }
