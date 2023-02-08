@@ -12,17 +12,14 @@ Menu::Menu(int screenWidth, int screenHeight){
     entries[0].text = "Play";
     entries[0].entry = PLAY;
     entries[0].fontSize = 30;
-    entries[1].text = "Settings";
-    entries[1].entry = SETTINGS;
+    entries[1].text = "Credits";
+    entries[1].entry = CREDITS;
     entries[1].fontSize = 30;
-    entries[2].text = "Credits";
-    entries[2].entry = CREDITS;
+    entries[2].text = "Quit";
+    entries[2].entry = QUIT;
     entries[2].fontSize = 30;
-    entries[3].text = "Quit";
-    entries[3].entry = QUIT;
-    entries[3].fontSize = 30;
     
-    numOfEntries = 4;
+    numOfEntries = 3;
     selected = NONE;
     isSelected = false;
     lastMousePos = GetMousePosition();
@@ -46,7 +43,7 @@ int Menu::loop(){
 
 void Menu::draw(){
     BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(DARKGRAY);
         
         std::string titleText = "Nokka Helt Cracy";
         int titleFontSize = 50;
@@ -146,10 +143,6 @@ int Menu::update(){
                 std::cout << "Play pressed" << std::endl;
                 pressed = PLAY; 
                 break;
-            case SETTINGS:
-                std::cout << "Settings pressed" << std::endl;
-                pressed = SETTINGS;
-                break;
             case CREDITS:
                 std::cout << "Credits pressed" << std::endl;
                 pressed = CREDITS;
@@ -168,10 +161,6 @@ int Menu::update(){
                 std::cout << "Play pressed" << std::endl;
                 pressed = PLAY;
                 break;
-            case SETTINGS:
-                std::cout << "Settings pressed" << std::endl;
-                pressed = SETTINGS;
-                break;
             case CREDITS:
                 std::cout << "Credits pressed" << std::endl;
                 pressed = CREDITS;
@@ -187,15 +176,17 @@ int Menu::update(){
 
     if(pressed == CREDITS){
         Credits creds(screenWidth, screenHeight);
-        creds.loop();
+        int code = creds.loop();
+        std::cout << code << std::endl;
+        return 0;
     } else if(pressed == PLAY){
         LevelSelect ls = LevelSelect(screenWidth, screenHeight);
         int code = ls.loop();
         if(code == 2){
             return 2;
         } else if(code < 0){
-
             return code;
         }
     }
+    return 0;
 }

@@ -3,7 +3,6 @@
 
 enum Entries{
     PLAY,
-    SETTINGS,
     CREDITS,
     QUIT,
     NONE
@@ -27,7 +26,7 @@ class Menu{
         void draw();
         int update();
         int numOfEntries;
-        Entry entries[4];
+        Entry entries[3];
         Entries selected;
         bool isSelected;
         Vector2 lastMousePos;

@@ -10,8 +10,9 @@ class LevelSelect{
         int screenHeight;
         int screenWidth;
         void draw();
-        int update(Rectangle rect);
+        int update(Rectangle rect, int curent);
         int numOfLevels;
         bool isSelected;
         Vector2 lastMousePos;
+        int selected;
 };

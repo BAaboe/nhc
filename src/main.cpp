@@ -26,13 +26,6 @@ class Game {
 
         double timeOnLevel;
        
-        Game(){
-            loadLevel(1);
-            float startX, startY;
-            startX = levelData["start_pos"][0].asFloat();
-            startY = levelData["start_pos"][1].asFloat();
-            player.setPosition({startX, startY});            
-        }
         int main();
 
         void draw();
@@ -56,11 +49,11 @@ int Game::main(){
     Menu menu(screenWidth, screenHeight);
     int c = menu.loop();
     
+    bool gameRunning = true;
     if(c == 2){
-        CloseWindow();
+        gameRunning = false;
     }else if(c < 0){
         loadLevel(c*-1);
-        std::cout << "asd" << std::endl;
         float startX, startY;
         startX = levelData["start_pos"][0].asFloat();
         startY = levelData["start_pos"][1].asFloat();
@@ -79,19 +72,19 @@ int Game::main(){
 
     timeOnLevel = 0;
 
-    while(!WindowShouldClose()){
+    while(!WindowShouldClose() && gameRunning){
         int code = update();
         if(code == 2){
-            CloseWindow();
+            gameRunning = false;
         }
 
         draw();
 
     }
-
-    CloseWindow();
+    std::cout << "lkjkjlkjfdsalkjfdsalj" << std::endl;
     UnloadTexture(player.slime);
     UnloadTexture(cobal);
+    CloseWindow();
     
 
     return 0;
@@ -120,7 +113,7 @@ std::string Game::getTimeString(){
 void Game::draw(){
     BeginDrawing();
 
-    ClearBackground(RAYWHITE);
+    ClearBackground(DARKGRAY);
     
 
     DrawText(getTimeString().c_str(), 10, 10, 30, BLACK);
@@ -207,9 +200,6 @@ void Game::loadLevel(int levelNum){
 
     reader.parse(file, levelData);
     
-    std::cout << levelNum << std::endl;
-
-
     for(int i = 0; i < levelData["data"].size(); i++){
         levelData["data"][i][1] = screenHeight-levelData["data"][i][1].asFloat(); 
     }

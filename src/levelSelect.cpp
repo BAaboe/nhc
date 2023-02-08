@@ -1,4 +1,5 @@
 #include "levelSelect.h"
+#include <exception>
 #include <raylib.h>
 #include <string>
 #include <iostream>
@@ -13,7 +14,7 @@ int LevelSelect::loop(){
     bool first = true;
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(DARKGRAY);
         std::string titleText = "Level Select";
         int titleFontSize = 50;
         int titleWidth = MeasureText(titleText.c_str(), titleFontSize);
@@ -35,12 +36,13 @@ int LevelSelect::loop(){
                 Rectangle rect = (Rectangle){(float)x+(padding+width)*ii, (float)y+(padding+height)*i, (float)width, (float)height};
                 int code = 0;
                 if(!first){
-                    code = update(rect);
+                    code = update(rect, i*3+ii+1);
                 }
                 Color color = BLACK;
                 if(code == 1){
                     color = MAROON;
                 } else if(code == 2){
+                    EndDrawing();
                     return (i*3+ii+1 )*-1;
                 }
                 DrawRectangleRoundedLines(rect, .2, 1, 5, color);
@@ -49,6 +51,24 @@ int LevelSelect::loop(){
                 
             }
         }
+        
+        int backFontSize = 30;
+        int backWidth = MeasureText("Back", backFontSize);
+        int backX = screenWidth/2-backWidth/2;
+        int backY = screenHeight-backFontSize-25;
+
+        int code = update((Rectangle){(float)backX, (float)backY, (float)backWidth, (float)backFontSize}, 10); 
+        
+        Color backColor = BLACK;
+        if(code == 1){
+            backColor = MAROON;
+        } else if (code == 2) {
+            EndDrawing();
+            return 0;
+        }
+        
+        DrawText("Back", backX, backY, backFontSize, backColor);
+
         EndDrawing();
         first = false;
         // update();
@@ -58,17 +78,49 @@ int LevelSelect::loop(){
     return 2;
 }
 
-int LevelSelect::update(Rectangle rect){
+int LevelSelect::update(Rectangle rect, int curent){
+
     Vector2 mousePos = GetMousePosition();
+
     if(mousePos.x > rect.x && mousePos.x < rect.x+rect.width){
         if(mousePos.y > rect.y && mousePos.y < rect.y+rect.height){
-            if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-                return 2;
-            }
-            return 1;
+            selected = curent;
         }
     }
+    if(curent == 1){
+
+        if(IsKeyPressed(KEY_LEFT)){
+            if(selected-1 > 0){
+                selected -= 1;
+            }
+        } else if(IsKeyPressed(KEY_RIGHT)){
+            if(selected+1 < 10){
+                selected += 1;
+            }
+        } else if(IsKeyPressed(KEY_DOWN)){
+            if(selected+3 > 10){
+                selected = 10;
+            } else{
+                selected+=3; 
+            }
+        } else if(IsKeyPressed(KEY_UP)){
+            if(selected-3 > 0){
+                selected -= 3;
+            }
+        }
+    }
+    std::cout << selected << std::endl;
+    if(selected == curent){
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            return 2;
+        } else if(IsKeyPressed(KEY_ENTER)){
+            return 2;
+        }
+        return 1;
+    }
+
     return 0;
+
 }
 
 void LevelSelect::draw(){

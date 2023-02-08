@@ -19,4 +19,7 @@ class Credits{
         int screenWidth;
         Contributer contributers[2];
         int numOfContributers;       
+
+        int backX, backY, backFontSize, backWidth;
+        Color backColor;
 };
