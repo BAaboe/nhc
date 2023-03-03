@@ -40,7 +40,7 @@ class Game {
 };
  
 int Game::main(){
-    InitWindow(screenWidth, screenHeight, "Nokka Helt Crazy");
+    InitWindow(screenWidth, screenHeight, "kjkjkj");
      
     SetTargetFPS(60);
     
