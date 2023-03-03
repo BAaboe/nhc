@@ -42,7 +42,7 @@ int LevelCleared::loop(){
 
 void LevelCleared::draw(){
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(DARKGRAY);
     
     std::string titleText = "Level Cleared";
     int titleFontSize = 50;

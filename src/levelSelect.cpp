@@ -81,14 +81,19 @@ int LevelSelect::loop(){
 int LevelSelect::update(Rectangle rect, int curent){
 
     Vector2 mousePos = GetMousePosition();
-
-    if(mousePos.x > rect.x && mousePos.x < rect.x+rect.width){
-        if(mousePos.y > rect.y && mousePos.y < rect.y+rect.height){
-            selected = curent;
+    
+    if(mousePos.x != lastMousePos.x && mousePos.y != lastMousePos.y){
+        std::cout << "asd" <<  std::endl;
+        if(mousePos.x > rect.x && mousePos.x < rect.x+rect.width){
+            if(mousePos.y > rect.y && mousePos.y < rect.y+rect.height){
+                selected = curent;
+            }
         }
     }
+    
+    
     if(curent == 1){
-
+    lastMousePos = mousePos;
         if(IsKeyPressed(KEY_LEFT)){
             if(selected-1 > 0){
                 selected -= 1;
@@ -109,7 +114,6 @@ int LevelSelect::update(Rectangle rect, int curent){
             }
         }
     }
-    std::cout << selected << std::endl;
     if(selected == curent){
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
             return 2;

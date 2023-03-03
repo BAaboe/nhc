@@ -81,7 +81,6 @@ int Game::main(){
         draw();
 
     }
-    std::cout << "lkjkjlkjfdsalkjfdsalj" << std::endl;
     UnloadTexture(player.slime);
     UnloadTexture(cobal);
     CloseWindow();
