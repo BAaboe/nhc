@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <string>
 #include <iostream>
+#include "config.h"
 
 LevelSelect::LevelSelect(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
@@ -14,7 +15,7 @@ int LevelSelect::loop(){
     bool first = true;
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(DARKGRAY);
+        ClearBackground(BACKGROUNDCOLOR);
         std::string titleText = "Level Select";
         int titleFontSize = 50;
         int titleWidth = MeasureText(titleText.c_str(), titleFontSize);
@@ -22,7 +23,7 @@ int LevelSelect::loop(){
         int titleX = screenWidth/2-titleWidth/2;
         int titleY = 25;
         
-        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,BLACK);
+        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,TEXTCOLOR);
         
         int width = 100;
         int height = 100;
@@ -38,7 +39,7 @@ int LevelSelect::loop(){
                 if(!first){
                     code = update(rect, i*3+ii+1);
                 }
-                Color color = BLACK;
+                Color color = TEXTCOLOR;
                 if(code == 1){
                     color = MAROON;
                 } else if(code == 2){
@@ -59,7 +60,7 @@ int LevelSelect::loop(){
 
         int code = update((Rectangle){(float)backX, (float)backY, (float)backWidth, (float)backFontSize}, 10); 
         
-        Color backColor = BLACK;
+        Color backColor = TEXTCOLOR;
         if(code == 1){
             backColor = MAROON;
         } else if (code == 2) {
@@ -81,9 +82,8 @@ int LevelSelect::loop(){
 int LevelSelect::update(Rectangle rect, int curent){
 
     Vector2 mousePos = GetMousePosition();
-    
     if(mousePos.x != lastMousePos.x && mousePos.y != lastMousePos.y){
-        std::cout << "asd" <<  std::endl;
+        if(curent == 1){selected = 0;}
         if(mousePos.x > rect.x && mousePos.x < rect.x+rect.width){
             if(mousePos.y > rect.y && mousePos.y < rect.y+rect.height){
                 selected = curent;
@@ -91,9 +91,11 @@ int LevelSelect::update(Rectangle rect, int curent){
         }
     }
     
-    
+    if(curent == 10){    
+        lastMousePos = mousePos;
+    }
+
     if(curent == 1){
-    lastMousePos = mousePos;
         if(IsKeyPressed(KEY_LEFT)){
             if(selected-1 > 0){
                 selected -= 1;

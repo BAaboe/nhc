@@ -4,6 +4,8 @@
 #include <iostream>
 #include "credits.h"
 #include "levelSelect.h"
+#include "config.h"
+
 
 Menu::Menu(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
@@ -43,16 +45,16 @@ int Menu::loop(){
 
 void Menu::draw(){
     BeginDrawing();
-        ClearBackground(DARKGRAY);
+        ClearBackground(BACKGROUNDCOLOR);
         
-        std::string titleText = "Nokka Helt Cracy";
+        std::string titleText = "BAB!";
         int titleFontSize = 50;
         int titleWidth = MeasureText(titleText.c_str(), titleFontSize);
         
         int titleX = screenWidth/2-titleWidth/2;
         int titleY = 25;
         
-        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,BLACK);
+        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,TEXTCOLOR);
 
         for(int i=0; i<numOfEntries; i++){
 
@@ -60,11 +62,12 @@ void Menu::draw(){
             
             if(i != 0){
                 entries[i].y = entries[i-1].y+entries[i-1].fontSize*2;
+                    
             }else{
                 entries[i].y = 150;
             }
             
-            Color color = BLACK;
+            Color color = TEXTCOLOR;
             if(entries[i].entry == selected){
                 color = MAROON;
             }
@@ -117,13 +120,12 @@ int Menu::update(){
             int x2 = x1+MeasureText(entries[i].text.c_str(), entries[i].fontSize);
             int y1 = entries[i].y;
             int y2 = y1+entries[i].fontSize;
+            isSelected = false;
             if(mousePos.x > x1 && mousePos.x < x2){
                 if(mousePos.y > y1 && mousePos.y < y2){
                     selected = entries[i].entry;
                     isSelected = true;
                     break;
-                }else if(i == 2){
-                    isSelected = false;
                 }
             }    
         }

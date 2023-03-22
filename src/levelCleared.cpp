@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "credits.h"
+#include "config.h"
 
 LevelCleared::LevelCleared(int screenWidth, int screenHeight, std::string time){
     this->screenWidth = screenWidth;
@@ -33,6 +34,8 @@ int LevelCleared::loop(){
             return 1;
         }else if(c == 2){
             return 2;
+        }else if(c == 3){
+            return 3;
         }
         draw();
     }
@@ -42,7 +45,7 @@ int LevelCleared::loop(){
 
 void LevelCleared::draw(){
     BeginDrawing();
-    ClearBackground(DARKGRAY);
+    ClearBackground(BACKGROUNDCOLOR);
     
     std::string titleText = "Level Cleared";
     int titleFontSize = 50;
@@ -58,8 +61,8 @@ void LevelCleared::draw(){
     int timeX = screenWidth/2-timeWidth/2;
     int timeY = 80;
 
-    DrawText(timeText.c_str(), timeX, timeY, timeFontSize, BLACK);    
-    DrawText(titleText.c_str(), titleX,titleY,titleFontSize, BLACK);
+    DrawText(timeText.c_str(), timeX, timeY, timeFontSize, TEXTCOLOR);    
+    DrawText(titleText.c_str(), titleX,titleY,titleFontSize, TEXTCOLOR);
 
     for(int i=0; i<numOfEntries; i++){
 
@@ -71,7 +74,7 @@ void LevelCleared::draw(){
             entries[i].y = 150;
         }
         
-        Color color = BLACK;
+        Color color = TEXTCOLOR;
         if(entries[i].entry == selected){
             color = MAROON;
         }
@@ -124,13 +127,12 @@ int LevelCleared::update(){
             int x2 = x1+MeasureText(entries[i].text.c_str(), entries[i].fontSize);
             int y1 = entries[i].y;
             int y2 = y1+entries[i].fontSize;
+            isSelected = false;
             if(mousePos.x > x1 && mousePos.x < x2){
                 if(mousePos.y > y1 && mousePos.y < y2){
                     selected = entries[i].entry;
                     isSelected = true;
                     break;
-                }else if(i == 2){
-                    isSelected = false;
                 }
             }    
         }
@@ -144,7 +146,7 @@ int LevelCleared::update(){
     
     Entries pressed = NONE;
 
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isSelected){
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isSelected || IsKeyPressed(KEY_ENTER)){
         switch (selected) {
             case NEXT:
                 std::cout << "Next pressed" << std::endl;
@@ -153,24 +155,7 @@ int LevelCleared::update(){
             case BACK:
                 std::cout << "BACK pressed" << std::endl;
                 pressed = BACK;
-                break;
-            case QUIT:
-                std::cout << "Quit pressed" << std::endl;
-                return 2;
-                break;
-            default:
-                break;
-        }
-    }
-    if(IsKeyPressed(KEY_ENTER)){
-        switch (selected) {
-            case NEXT:
-                std::cout << "Next pressed" << std::endl;
-                pressed = NEXT;
-                break;
-            case BACK:
-                std::cout << "BACK pressed" << std::endl;
-                pressed = BACK;
+                return 3;
                 break;
             case QUIT:
                 std::cout << "Quit pressed" << std::endl;

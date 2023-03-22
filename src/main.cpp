@@ -9,6 +9,7 @@
 #include <string>
 #include "menu.h"
 #include "levelCleared.h"
+#include "config.h"
 
 class Game {
     public:
@@ -40,46 +41,59 @@ class Game {
 };
  
 int Game::main(){
-    InitWindow(screenWidth, screenHeight, "Nokka Helt Crazy");
+    InitWindow(screenWidth, screenHeight, "BAB");
      
     SetTargetFPS(60);
     
     SetExitKey(0);
-
-    Menu menu(screenWidth, screenHeight);
-    int c = menu.loop();
     
-    bool gameRunning = true;
-    if(c == 2){
-        gameRunning = false;
-    }else if(c < 0){
-        loadLevel(c*-1);
-        float startX, startY;
-        startX = levelData["start_pos"][0].asFloat();
-        startY = levelData["start_pos"][1].asFloat();
-        player.setPosition({startX, startY});            
-    }
-
     player.slime = LoadTexture("assets/slime.png");
     cobal = LoadTexture("assets/cobal.png"); 
+    
+    int autoLevel = 0;
 
-
-    camera = { 0 };
-    camera.target = player.getPosition();
-    camera.offset = {(float)screenWidth/2, (float)screenHeight/2};
-    camera.rotation = .0f;
-    camera.zoom = 1.0f;
-
-    timeOnLevel = 0;
-
+    bool gameRunning = true;
     while(!WindowShouldClose() && gameRunning){
-        int code = update();
-        if(code == 2){
+        std::cout << gameRunning << std::endl;
+        
+        int c;
+        if(autoLevel == 0){
+            Menu menu(screenWidth, screenHeight);
+            c = menu.loop();
+        }else{
+            c = autoLevel*-1;
+        }
+        if(c == 2){
             gameRunning = false;
+        }else if(c < 0){
+            loadLevel(c*-1);
+            float startX, startY;
+            startX = levelData["start_pos"][0].asFloat();
+            startY = levelData["start_pos"][1].asFloat();
+            player.setPosition({startX, startY});            
         }
 
-        draw();
 
+
+        camera = { 0 };
+        camera.target = player.getPosition();
+        camera.offset = {(float)screenWidth/2, (float)screenHeight/2};
+        camera.rotation = .0f;
+        camera.zoom = 1.0f;
+
+        timeOnLevel = 0;
+
+        while(!WindowShouldClose() && gameRunning){
+            int code = update();
+            if(code == 2){
+                gameRunning = false;
+                break;
+            }else if(code == 3){
+                break;
+            }
+
+            draw();
+        }
     }
     UnloadTexture(player.slime);
     UnloadTexture(cobal);
@@ -112,10 +126,10 @@ std::string Game::getTimeString(){
 void Game::draw(){
     BeginDrawing();
 
-    ClearBackground(DARKGRAY);
+    ClearBackground(BACKGROUNDCOLOR);
     
 
-    DrawText(getTimeString().c_str(), 10, 10, 30, BLACK);
+    DrawText(getTimeString().c_str(), 10, 10, 30, TEXTCOLOR);
 
     BeginMode2D(camera);
 
@@ -164,6 +178,8 @@ int Game::update(){
         int code2 = levelCleard();
         if(code2 == 2){
             return 2;
+        }else if(code2 == 3){
+            return 3;
         }
     }
     return 0;
@@ -181,9 +197,9 @@ int Game::levelCleard(){
  //        
  //        std::string timeText = "You'r time was: " +getTimeString();
  //
- //        DrawText(timeText.c_str(), 0, 60, 50, BLACK);
+ //        DrawText(timeText.c_str(), 0, 60, 50, TEXTCOLOR);
  // 
- //        DrawText("Leveld Cleard", 0, 0, 50, BLACK);
+ //        DrawText("Leveld Cleard", 0, 0, 50, TEXTCOLOR);
  //
  //        EndDrawing();
  //    }

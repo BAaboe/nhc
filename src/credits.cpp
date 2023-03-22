@@ -1,6 +1,7 @@
 #include "credits.h"
 #include <raylib.h>
 #include <string>
+#include "config.h"
 
 Credits::Credits(int screenWidth, int screenHeight){
     this->screenWidth = screenWidth;
@@ -9,7 +10,7 @@ Credits::Credits(int screenWidth, int screenHeight){
     numOfContributers = 2;
     contributers[0].name = "Benjamin \"BAaboe\" Mjaatvedt";
     contributers[0].role = "Lead And Only Developer";
-    contributers[1].name = "Azzazzin";
+    contributers[1].name = "A Friend";
     contributers[1].role = "Art";
 }
 
@@ -33,7 +34,7 @@ int Credits::update(){
     backWidth = MeasureText("Back", backFontSize);
     backX = screenWidth/2-backWidth/2;
     backY = screenHeight-backFontSize-25;
-    backColor = BLACK;
+    backColor = TEXTCOLOR;
 
     Vector2 mousePos = GetMousePosition();
 
@@ -50,7 +51,7 @@ int Credits::update(){
 
 void Credits::draw(){
     BeginDrawing();
-        ClearBackground(DARKGRAY);
+        ClearBackground(BACKGROUNDCOLOR);
 
         std::string titleText = "Credits";
         int titleFontSize = 50;
@@ -59,7 +60,7 @@ void Credits::draw(){
         int titleX = screenWidth/2-titleWidth/2;
         int titleY = 25;
 
-        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,BLACK);
+        DrawText(titleText.c_str(), titleX,titleY,titleFontSize,TEXTCOLOR);
 
         int fontSize = 20;
         for(int i=0; i<numOfContributers; i++){
@@ -72,7 +73,7 @@ void Credits::draw(){
                 contributers[i].y = 250;
             }
             
-            DrawText(text.c_str(), contributers[i].x, contributers[i].y, fontSize, BLACK);
+            DrawText(text.c_str(), contributers[i].x, contributers[i].y, fontSize, TEXTCOLOR);
         }
 
 
