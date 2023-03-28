@@ -10,6 +10,8 @@ class Player{
 
         int update(int, int, Camera2D*, Json::Value);
         void draw();
+        
+        void reset();
 
         Player();
 

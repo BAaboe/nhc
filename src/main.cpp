@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <json/reader.h>
 #include <json/value.h>
+#include <ostream>
 #include <raylib.h>
 #include "player.h"
 #include <iostream>
@@ -51,22 +52,27 @@ int Game::main(){
     cobal = LoadTexture("assets/cobal.png"); 
     
     int autoLevel = 0;
+    int level = 0;
 
     bool gameRunning = true;
     while(!WindowShouldClose() && gameRunning){
-        std::cout << gameRunning << std::endl;
         
-        int c;
+        int c = 0;
         if(autoLevel == 0){
             Menu menu(screenWidth, screenHeight);
             c = menu.loop();
         }else{
-            c = autoLevel*-1;
+            level = autoLevel;
         }
         if(c == 2){
             gameRunning = false;
+            break;
         }else if(c < 0){
-            loadLevel(c*-1);
+            level = c*-1;
+        }
+
+        if(level > 0){
+            loadLevel(level);
             float startX, startY;
             startX = levelData["start_pos"][0].asFloat();
             startY = levelData["start_pos"][1].asFloat();
@@ -82,18 +88,28 @@ int Game::main(){
         camera.zoom = 1.0f;
 
         timeOnLevel = 0;
-
+        
         while(!WindowShouldClose() && gameRunning){
             int code = update();
             if(code == 2){
                 gameRunning = false;
                 break;
             }else if(code == 3){
+                player.reset(); 
+                break;
+            }else if(code == 4){
+                player.reset();
+                autoLevel = ++level;
                 break;
             }
 
             draw();
+            if(WindowShouldClose()){
+                gameRunning = false;
+            }
         }
+        
+
     }
     UnloadTexture(player.slime);
     UnloadTexture(cobal);
@@ -180,6 +196,8 @@ int Game::update(){
             return 2;
         }else if(code2 == 3){
             return 3;
+        }else if(code2 == 4){
+            return 4;
         }
     }
     return 0;

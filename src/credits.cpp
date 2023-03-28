@@ -22,7 +22,7 @@ int Credits::loop(){
         }
         draw();
     }
-    return 1;
+    return 2;
 }
 
 int Credits::update(){

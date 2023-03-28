@@ -59,7 +59,7 @@ int Player::update(int screenHeight, int screenWidth, Camera2D *camera, Json::Va
             position.x -= xForce;
         }
     }
-    if(position.y + height >= screenHeight){
+    if(position.y >= screenHeight){
         // position.y = screenHeight - height;
         // grounded = true;
         position = startPosition;
@@ -172,3 +172,9 @@ Rectangle Player::checkHitbox(Json::Value level){
     return (Rectangle) {0,-100,0,0};
 }
 
+
+void Player::reset(){
+    grounded = false;
+    xForce = 0.0f;
+    yForce = 0.0f;
+}

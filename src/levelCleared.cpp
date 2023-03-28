@@ -36,6 +36,8 @@ int LevelCleared::loop(){
             return 2;
         }else if(c == 3){
             return 3;
+        }else if(c == 4){
+            return 4;
         }
         draw();
     }
@@ -151,6 +153,7 @@ int LevelCleared::update(){
             case NEXT:
                 std::cout << "Next pressed" << std::endl;
                 pressed = NEXT;
+                return 4;
                 break;
             case BACK:
                 std::cout << "BACK pressed" << std::endl;
@@ -165,5 +168,5 @@ int LevelCleared::update(){
                 break;
         }
     }
-
+    return 0;
 }

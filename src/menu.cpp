@@ -179,7 +179,9 @@ int Menu::update(){
     if(pressed == CREDITS){
         Credits creds(screenWidth, screenHeight);
         int code = creds.loop();
-        std::cout << code << std::endl;
+        if(code == 2){
+            return 2;
+        }
         return 0;
     } else if(pressed == PLAY){
         LevelSelect ls = LevelSelect(screenWidth, screenHeight);
