@@ -146,18 +146,14 @@ int LevelCleared::update(){
 
     lastMousePos = mousePos;
     
-    Entries pressed = NONE;
-
-    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isSelected || IsKeyPressed(KEY_ENTER)){
+    if((IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isSelected) || IsKeyPressed(KEY_ENTER)){
         switch (selected) {
             case NEXT:
                 std::cout << "Next pressed" << std::endl;
-                pressed = NEXT;
                 return 4;
                 break;
             case BACK:
                 std::cout << "BACK pressed" << std::endl;
-                pressed = BACK;
                 return 3;
                 break;
             case QUIT:
