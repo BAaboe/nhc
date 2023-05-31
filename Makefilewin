@@ -1,0 +1,30 @@
+CC=  g++  # gcc or g++
+WINCC= i686-w64-mingw32-g++
+
+CFLAGS=-g -Wall -static-libgcc -static-libstdc++ -mwindows
+LIBS=-lraylib -ljsoncpp
+
+O=./build
+S=./src
+
+OBJS=				\
+			$(O)/player.o \
+			$(O)/menu.o \
+			$(O)/credits.o \
+			$(O)/levelCleared.o \
+			$(O)/levelSelect.o \
+
+all:	 $(O)/nhc
+
+clean:
+	rm -f ./build/*.o
+
+run: all
+	./nhc
+
+$(O)/nhc:	$(OBJS) $(O)/main.o
+	$(WINCC) $(CFLAGS) $(OBJS)  $(O)/main.o assets/icon.o \
+	-o nhc $(LIBS)
+
+$(O)/%.o:	$(S)/%.cpp
+	$(WINCC) $(CFLAGS) -c $< -o $@

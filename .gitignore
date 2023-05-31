@@ -1,2 +1,6 @@
 nhc
 build/*
+nhc.exe
+win/*
+handin/*
+Makefile.bu
