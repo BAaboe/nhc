@@ -16,6 +16,7 @@ class App:
                       "data": [],
                       "goal": [0, 0]}
         self.firstRect = None
+        self.cameraOffset = [0, 0]
 
     def on_init(self):
         pygame.init()
@@ -45,7 +46,7 @@ class App:
                     y = self.firstRect[1]
                     width = rect[0]+rect[2]-self.firstRect[0]
                     height = rect[1]+rect[3]-self.firstRect[1]
-                    
+
                     if self.firstRect[0] < rect[0]:
                         x = self.firstRect[0]
                         width = rect[0]+rect[2]-self.firstRect[0]
@@ -65,6 +66,7 @@ class App:
                     self.firstRect = None
 
         if event.type == pygame.KEYDOWN:
+            print(self.cameraOffset)
             if event.key == pygame.K_p:
                 print(self.level)
             elif event.key == pygame.K_s:
@@ -72,6 +74,22 @@ class App:
                 self.level = las.sort(self.level)
             elif event.key == pygame.K_ESCAPE:
                 self.firstRect = None
+            elif event.key == pygame.K_LEFT:
+                if self.cameraOffset[0] < 0:
+                    self.cameraOffset[0] += 50
+                else:
+                    self.cameraOffset[0] = 0
+            elif event.key == pygame.K_RIGHT:
+                self.cameraOffset[0] -= 50
+            elif event.key == pygame.K_LEFT:
+                self.cameraOffset[1] -= 50
+            elif event.key == pygame.K_DOWN:
+                if self.cameraOffset[1] < self.height:
+                    self.cameraOffset[1] += 50
+                else:
+                    self.cameraOffset[1] = self.height
+            elif event.key == pygame.K_UP:
+                self.cameraOffset[1] -= 50
 
     def on_loop(self):
         self.mouse_pos = pygame.mouse.get_pos()
@@ -116,9 +134,9 @@ class App:
     def display_rect(self, rect):
         for i in range(int(rect[2]/self.blockSize)):
             for j in range(int(rect[3]/self.blockSize)):
-                dRect = [rect[0]+i*self.blockSize, rect[1]+j*self.blockSize, self.blockSize, self.blockSize]
+                dRect = [(rect[0]+i*self.blockSize)+self.cameraOffset[0], (rect[1]+j*self.blockSize)+self.cameraOffset[1], self.blockSize, self.blockSize]
                 self._display_surf.blit(self.cobel, dRect)
-    
+
     def on_cleanup(self):
         pygame.quit()
 

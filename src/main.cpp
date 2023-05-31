@@ -18,6 +18,8 @@ class Game {
         const int screenHeight = 600;
 
         Texture2D cobal;
+        
+        Texture2D flag;
 
         Json::Value levelData;
 
@@ -50,7 +52,8 @@ int Game::main(){
     
     player.slime = LoadTexture("assets/slime.png");
     cobal = LoadTexture("assets/cobal.png"); 
-    
+    flag = LoadTexture("assets/flag.png");
+
     int autoLevel = 0;
     int level = 0;
 
@@ -82,8 +85,8 @@ int Game::main(){
 
 
         camera = { 0 };
-        camera.target = player.getPosition();
-        camera.offset = {(float)screenWidth/2, (float)screenHeight/2};
+        camera.target = {player.getPosition().x, 0};
+        camera.offset = {(float)screenWidth/2, 0};
         camera.rotation = .0f;
         camera.zoom = 1.0f;
 
@@ -111,6 +114,7 @@ int Game::main(){
         
 
     }
+    UnloadTexture(flag);
     UnloadTexture(player.slime);
     UnloadTexture(cobal);
     CloseWindow();
@@ -168,6 +172,12 @@ void Game::draw(){
     }
     player.draw();
     
+
+    int flagX = levelData["goal"][0].asInt();
+    int flagY = levelData["goal"][1].asInt();
+    
+    DrawTexture(flag, flagX, flagY-50, WHITE);
+
     EndMode2D();
 
     EndDrawing();
